@@ -53,19 +53,11 @@ mysql -u root -p < database/schema.sql
 │   ├── config/
 │   │   ├── database.js
 │   │   └── jwt.js
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   └── userController.js
-│   ├── middleware/
-│   │   ├── auth.js
-│   │   └── validation.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   └── users.js
+│   ├── views/
+│   │   ├── acceso_denegado.ejs
+│   │   └── dashboard.ejs
+│   │   └── login.ejs
 │   └── app.js
-├── database/
-│   └── schema.sql
-└── server.js
 ```
 
 ## Endpoints API
