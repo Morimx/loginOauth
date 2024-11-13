@@ -91,19 +91,6 @@ mysql -u root -p < database/schema.sql
 - **GET /api/users/:id**
   - Obtener usuario por ID (requiere autenticación)
 
-## Scripts Disponibles
-
-```bash
-# Iniciar en modo desarrollo
-npm run dev
-
-# Iniciar en modo producción
-npm start
-
-# Ejecutar tests
-npm test
-```
-
 ## Seguridad
 
 - Passwords hasheados con bcrypt
