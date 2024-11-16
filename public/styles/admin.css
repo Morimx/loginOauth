@@ -1,0 +1,233 @@
+body {
+    background-color: #f4f4f9;
+}
+h1 {
+    color: #333;
+}
+
+.form-container, .user-table {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.form-container input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.form-container button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.tabla{
+    margin: 20px, 10px, 40px, 20px;
+}
+.form-container button:hover {
+    background-color: #0056b3;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+table th {
+    background-color: #007BFF;
+    color: white;
+}
+.checkbox {
+    text-align: center;
+}
+
+.table-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+/* Estilos base de la sidebar */
+.sidebar {
+    background-color: #f8f9fa;
+    padding: 20px;
+    height: 100vh;
+    border-right: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Contenedor de los botones */
+  .nav-link-alta {
+    position: relative;
+    width: 100px;
+    text-align: center;
+    display: block;
+    padding: 0.8rem 1.2rem;
+    margin: 0px 15px 0px 350px;
+    color: rgb(7, 131, 7);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    font-weight: 500;
+    border: 2px solid transparent;
+  }
+  
+  .nav-link-baja {
+    position: relative;
+    width: 100px;
+    text-align: center;
+    display: block;
+    padding: 0.8rem 1.2rem;
+    color: rgb(209, 34, 34);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    font-weight: 500;
+    border: 2px solid transparent;
+  }
+  
+  .nav-link-admin {
+    position: relative;
+    width: 100px;
+    text-align: center;
+    display: flex;
+    padding: 0.8rem 1.2rem;
+    margin: 0px 15px 0px 350px;
+    color: rgb(7, 131, 7);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    font-weight: 500;
+    border: 2px solid transparent;
+  }
+  
+  .nav-link-admin i{
+  display: flex;
+  padding: 0px 5px 0px 0px;
+  align-items: center;
+  
+  }
+  
+  
+  /* Efecto slider */
+  .nav-link-alta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #007bff;
+    transition: all 0.3s ease;
+    z-index: -1;
+  }
+  
+  /* Efecto slider */
+  .nav-link-baja::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #007bff;
+    transition: all 0.3s ease;
+    z-index: -1;
+  }
+  
+  /* Hover effects */
+  .nav-link-alta:hover {
+    color: #35b34a;
+    border-color: #35b34a;
+  }
+  
+  /* Hover effects */
+  .nav-link-baja:hover {
+    color: #d1423d;
+    border-color: #d1423d;
+  }
+  
+  .nav-link:hover::before {
+    left: 0;
+  }
+  
+  /* Estilo activo */
+  .nav-link-alta.active {
+    background: #35b34a;
+    color: white;
+  }
+  
+  .nav-link-baja.active {
+    background: #d1423d;
+    color: white;
+  }
+  
+  /* Badge para indicadores (opcional) */
+  .nav-badge {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #dc3545;
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+  }
+  
+  /* Iconos (si quieres añadirlos) */
+  .nav-link i {
+    margin-right: 8px;
+  }
+  
+  /* Animación de pulso para nuevas notificaciones */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .nav-link.has-notification {
+    animation: pulse 2s infinite;
+  }
+  
+  .navbar-collapse{
+    justify-content: right;
+    margin-right: 25px;
+    margin-bottom: 5px;
+  }
+  .navbar-brand{
+  margin-left: 25px;
+  margin-bottom: 5px;
+  }
+  
+  .submit-button{
+    text-align: right;
+    margin-top: 10px;
+  }

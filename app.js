@@ -5,6 +5,7 @@ const path = require('path');
 const iframeProxyMiddleware = require('./middleware/security');
 const isAuthenticated = require('./middleware/autentication');
 const isAdmin = require('./middleware/isadmin');
+const pool = require('./config/database');
 require('dotenv').config();
 
 const app = express();
@@ -55,8 +56,45 @@ app.get('/phishing', isAuthenticated, (req, res) => {
   res.redirect('https://www.youtube.com/embed/msAeHCoCdpc?si=yfchBpi89LUjkom4?&autoplay=1');
 });
 
-app.get('/admin', isAuthenticated, isAdmin, (req, res) => {
-  res.render('admin', { user: req.user, currentPage: 'admin' });
+// Nueva ruta para cargar usuarios
+app.get('/admin', isAuthenticated, isAdmin, async (req, res) => {
+  try {
+    const [usuarios] = await pool.query('SELECT * FROM usuarios');
+    res.render('admin', { user: req.user, usuarios, currentPage: 'admin' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al cargar usuarios');
+  }
+});
+
+// Nueva ruta para actualizar permisos
+app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res) => {
+  try {
+    // Obtén todos los usuarios de la base de datos para verificar los IDs existentes
+    const [usuarios] = await pool.query('SELECT id FROM usuarios');
+
+    // Mapea los usuarios para verificar cada checkbox
+    const updates = usuarios.map(async (usuario) => {
+      const id = usuario.id;
+
+      // Verifica si el checkbox estaba marcado en la solicitud
+      const fullAccess = req.body[`baja_${id}`] === 'on' ? 1 : 0;
+      const isAdmin = req.body[`admin_${id}`] === 'on' ? 1 : 0;
+
+      // Actualiza los valores en la base de datos
+      await pool.query('UPDATE usuarios SET full_access = ?, is_admin = ? WHERE id = ?', [
+        fullAccess,
+        isAdmin,
+        id,
+      ]);
+    });
+
+    await Promise.all(updates); // Espera a que todas las actualizaciones terminen
+    res.redirect('/admin');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al actualizar permisos');
+  }
 });
 
 app.get('/logout', (req, res) => {

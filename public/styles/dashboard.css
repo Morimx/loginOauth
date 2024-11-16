@@ -1,24 +1,3 @@
-/*.sidebar {
-  background-color: #f8f9fa;
-  padding: 20px;
-  height: 100vh;
-  border-right: 1px solid #dee2e6;
-}
-
-.sidebar a {
-  display: block;
-  padding: 10px 0;
-  color: #495057;
-  text-decoration: none;
-}
-
-.sidebar a.active {
-  font-weight: bold;
-  color: #007bff;
-}*/
-
-/* public/styles/dashboard.css */
-
 /* Estilos base de la sidebar */
 .sidebar {
   background-color: #f8f9fa;
@@ -61,6 +40,30 @@
   font-weight: 500;
   border: 2px solid transparent;
 }
+
+.nav-link-admin {
+  position: relative;
+  width: 100px;
+  text-align: center;
+  display: flex;
+  padding: 0.8rem 1.2rem;
+  margin: 0px 15px 0px 350px;
+  color: rgb(7, 131, 7);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  font-weight: 500;
+  border: 2px solid transparent;
+}
+
+.nav-link-admin i{
+display: flex;
+padding: 0px 5px 0px 0px;
+align-items: center;
+
+}
+
 
 /* Efecto slider */
 .nav-link-alta::before {
