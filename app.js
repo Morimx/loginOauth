@@ -4,6 +4,7 @@ const passport = require('./config/passport');
 const path = require('path');
 const iframeProxyMiddleware = require('./middleware/security');
 const isAuthenticated = require('./middleware/autentication');
+const isAdmin = require('./middleware/isadmin');
 require('dotenv').config();
 
 const app = express();
@@ -52,6 +53,10 @@ app.get('/baja', isAuthenticated, (req, res) => {
 
 app.get('/phishing', isAuthenticated, (req, res) => {
   res.redirect('https://www.youtube.com/embed/msAeHCoCdpc?si=yfchBpi89LUjkom4?&autoplay=1');
+});
+
+app.get('/admin', isAuthenticated, isAdmin, (req, res) => {
+  res.render('admin', { user: req.user, currentPage: 'admin' });
 });
 
 app.get('/logout', (req, res) => {

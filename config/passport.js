@@ -18,6 +18,7 @@ passport.deserializeUser(async (id, done) => {
 
     const iframe_alta = `/proxy-iframe?url=${encodeURIComponent(iframes[0].iframe_alta)}`;
     const iframe_baja = `/proxy-iframe?url=${encodeURIComponent(iframes[0].iframe_baja)}`;
+    const isAdmin = user.is_admin == 1;
     
     done(null, {
       id: id,
@@ -25,7 +26,8 @@ passport.deserializeUser(async (id, done) => {
       display_name: user.display_name,
       full_access: user.full_access,
       iframe_alta: iframe_alta,
-      iframe_baja: iframe_baja
+      iframe_baja: iframe_baja,
+      admin: user.is_admin
     });
 
   } catch (error) {
