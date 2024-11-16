@@ -80,6 +80,16 @@
             <% }) %>
           </tbody>
         </table>
+        <% if(messages.success){ %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <%= messages.success %>
+            </div>
+          <% } %>
+          <% if(messages.error){ %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <%= messages.error %>
+            </div>
+          <% } %>
         <div class="submit-button"">
         <button type="submit" class="btn btn-primary">Actualizar Permisos</button>
     </div>

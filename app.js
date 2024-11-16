@@ -5,6 +5,7 @@ const path = require('path');
 const iframeProxyMiddleware = require('./middleware/security');
 const isAuthenticated = require('./middleware/autentication');
 const isAdmin = require('./middleware/isadmin');
+const flash = require('express-flash');
 const pool = require('./config/database');
 require('dotenv').config();
 
@@ -12,6 +13,7 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
+app.use(flash())
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: 'secret-key',
@@ -90,9 +92,11 @@ app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res)
     });
 
     await Promise.all(updates); // Espera a que todas las actualizaciones terminen
+    req.flash('success', 'Usuarios actualizados correctamente');
     res.redirect('/admin');
   } catch (err) {
     console.error(err);
+    req.flash('error', 'Error al actualizar permisos');
     res.status(500).send('Error al actualizar permisos');
   }
 });

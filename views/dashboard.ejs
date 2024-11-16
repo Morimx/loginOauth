@@ -27,10 +27,12 @@
             <% } %>
           </div>
           <div class="d-flex">
+            <% if(user.admin == '1'){ %>
             <a href="/admin" class="nav-link-admin <%= currentPage === 'admin' ? 'active' : '' %>">
               <i class="fas fa-plus-circle"></i>
               Admin
             </a>
+            <% } %>
           </div>
     </div>
     <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
