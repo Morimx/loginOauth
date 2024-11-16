@@ -2,11 +2,13 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('./config/passport');
 const path = require('path');
+const iframeProxyMiddleware = require('./middleware/security');
+const isAuthenticated = require('./middleware/autentication');
 require('dotenv').config();
 
 const app = express();
 
-// Middleware
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -17,24 +19,19 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
   }
 }));
-
+app.use(iframeProxyMiddleware);
 
 // Inicializar Passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 // Configuración de EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware de autenticación
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/');
-};
 
 // Rutas
 app.get('/', (req, res) => {

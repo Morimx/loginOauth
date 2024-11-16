@@ -16,13 +16,16 @@ passport.deserializeUser(async (id, done) => {
     let domain = user.username.split('@').pop()
     const [iframes] = await pool.query('SELECT * FROM iframes WHERE domain = ?', [domain]);
 
+    const iframe_alta = `/proxy-iframe?url=${encodeURIComponent(iframes[0].iframe_alta)}`;
+    const iframe_baja = `/proxy-iframe?url=${encodeURIComponent(iframes[0].iframe_baja)}`;
+    
     done(null, {
       id: id,
       username: user.username,
       display_name: user.display_name,
       full_access: user.full_access,
-      iframe_alta: iframes[0].iframe_alta,
-      iframe_baja: iframes[0].iframe_baja
+      iframe_alta: iframe_alta,
+      iframe_baja: iframe_baja
     });
 
   } catch (error) {
