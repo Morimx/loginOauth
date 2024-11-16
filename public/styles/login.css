@@ -1,3 +1,4 @@
+
 body {
     margin: 0;
     padding: 0;
@@ -8,6 +9,14 @@ body {
     background-size: cover;          
     background-position: center; 
     background-attachment: fixed; 
+  }
+
+  .abm-title{
+    font-family: "Geist", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    padding: 5px 5px 10px 5px;
   }
 
   .login-container {
