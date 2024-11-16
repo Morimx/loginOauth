@@ -3,40 +3,42 @@
 <head>
   <title>Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="/styles/dashboard.css" rel="stylesheet">
   <script src="/scripts/lock.js"></script>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <span class="navbar-brand">
-        Bienvenido <%= user.display_name %>
-        <small class="text-muted">(<%= user.username %>)</small>
-      </span>
-      <a href="/logout" class="btn btn-outline-light">Cerrar Sesión</a>
+    <div class="d-flex flex-grow-1">
+        <span class="navbar-brand">
+          Bienvenido <%= user.display_name %>
+          <small class="text-muted">(<%= user.username %>)</small>
+        </span>
+          <div class="d-flex">
+            <a href="/alta" class="nav-link-alta <%= currentPage === 'alta' ? 'active' : '' %>">
+              <i class="fas fa-plus-circle"></i>
+              Alta
+            </a>
+            <% if(user.full_access){ %>
+              <a href="/baja" class="nav-link-baja <%= currentPage === 'baja' ? 'active' : '' %>">
+                <i class="fas fa-minus-circle"></i>
+                Baja
+              </a>
+            <% } %>
+          </div>
     </div>
-  </nav>
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-1 sidebar">
-        <a href="/alta" id="link-alta" class="active">Alta</a>
-        <% if(user.full_access){ %>
-          <a href="/baja" id="link-baja" class="active">Baja</a>
-        <% } %>
-      </div>
-      <div class="col-11 mt-4">
-        <div class="ratio ratio-16x9">
-          <iframe id="content-iframe" 
-                  src="<%= iframe %>" 
-                  allowfullscreen
-                  sandbox="allow-same-origin allow-scripts allow-forms">
-          </iframe>
-        </div>
+    <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
+      <a href="/phishing" class="btn btn-info mx-auto">
+        Aprende del phishing
+      </a>
+      <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+    </div>
+</nav>
+    <div>
+      <div class="ratio ratio-16x9">
+        <iframe id="content-iframe" src="<%= iframe %>" allowfullscreen></iframe>
       </div>
     </div>
-  </div>
-
-
+<script src="/scripts/activepage.js"></script>
 </body>
 </html>

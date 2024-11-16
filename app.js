@@ -43,11 +43,15 @@ app.get('/acceso_denegado', (req, res) => {
 });
 
 app.get('/alta', isAuthenticated, (req, res) => {
-  res.render('dashboard', { user: req.user, iframe:req.user.iframe_alta });
+  res.render('dashboard', { user: req.user, iframe:req.user.iframe_alta, currentPage: 'alta' });
 });
 
 app.get('/baja', isAuthenticated, (req, res) => {
-  res.render('dashboard', { user: req.user, iframe:req.user.iframe_baja });
+  res.render('dashboard', { user: req.user, iframe:req.user.iframe_baja, currentPage: 'baja' });
+});
+
+app.get('/phishing', isAuthenticated, (req, res) => {
+  res.redirect('https://www.youtube.com/embed/msAeHCoCdpc?si=yfchBpi89LUjkom4?&autoplay=1');
 });
 
 app.get('/logout', (req, res) => {
