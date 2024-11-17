@@ -69,35 +69,77 @@ app.get('/admin', isAuthenticated, isAdmin, async (req, res) => {
   }
 });
 
-// Nueva ruta para actualizar permisos
+// En app.js, modificar la ruta /admin/update-permissions
 app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res) => {
   try {
-    // Obtén todos los usuarios de la base de datos para verificar los IDs existentes
-    const [usuarios] = await pool.query('SELECT id FROM usuarios');
+      const [usuarios] = await pool.query('SELECT id FROM usuarios');
+      
+      // Mapea los usuarios para verificar cada checkbox y registrar cambios
+      const updates = usuarios.map(async (usuario) => {
+          const id = usuario.id;
+          const fullAccess = req.body[`baja_${id}`] === 'on' ? 1 : 0;
+          const isAdmin = req.body[`admin_${id}`] === 'on' ? 1 : 0;
 
-    // Mapea los usuarios para verificar cada checkbox
-    const updates = usuarios.map(async (usuario) => {
-      const id = usuario.id;
+          // Obtener valores actuales para comparar
+          const [currentValues] = await pool.query(
+              'SELECT full_access, is_admin FROM usuarios WHERE id = ?',
+              [id]
+          );
 
-      // Verifica si el checkbox estaba marcado en la solicitud
-      const fullAccess = req.body[`baja_${id}`] === 'on' ? 1 : 0;
-      const isAdmin = req.body[`admin_${id}`] === 'on' ? 1 : 0;
+          const current = currentValues[0];
+          
+          // Si hay cambios, actualizar y registrar
+          if (current.full_access !== fullAccess || current.is_admin !== isAdmin) {
+              // Actualizar permisos
+              await pool.query(
+                  'UPDATE usuarios SET full_access = ?, is_admin = ? WHERE id = ?',
+                  [fullAccess, isAdmin, id]
+              );
 
-      // Actualiza los valores en la base de datos
-      await pool.query('UPDATE usuarios SET full_access = ?, is_admin = ? WHERE id = ?', [
-        fullAccess,
-        isAdmin,
-        id,
-      ]);
-    });
+              // Registrar el cambio en los logs
+              const changes = [];
+              if (current.full_access !== fullAccess) {
+                  changes.push(`full_access: ${current.full_access} -> ${fullAccess}`);
+              }
+              if (current.is_admin !== isAdmin) {
+                  changes.push(`is_admin: ${current.is_admin} -> ${isAdmin}`);
+              }
 
-    await Promise.all(updates); // Espera a que todas las actualizaciones terminen
-    req.flash('success', 'Usuarios actualizados correctamente');
-    res.redirect('/admin');
+              await pool.query(
+                  'INSERT INTO user_logs (action_type, user_id, target_user_id, action_details) VALUES (?, ?, ?, ?)',
+                  ['permission_change', req.user.id, id, `Changed permissions: ${changes.join(', ')}`]
+              );
+          }
+      });
+
+      await Promise.all(updates);
+      req.flash('success', 'Usuarios actualizados correctamente');
+      res.redirect('/admin');
   } catch (err) {
-    console.error(err);
-    req.flash('error', 'Error al actualizar permisos');
-    res.status(500).send('Error al actualizar permisos');
+      console.error(err);
+      req.flash('error', 'Error al actualizar permisos');
+      res.status(500).send('Error al actualizar permisos');
+  }
+});
+
+app.get('/admin/logs', isAuthenticated, isAdmin, async (req, res) => {
+  try {
+      const [logs] = await pool.query(`
+          SELECT 
+              ul.*,
+              u1.username as actor_username,
+              u2.username as target_username
+          FROM user_logs ul
+          LEFT JOIN usuarios u1 ON ul.user_id = u1.id
+          LEFT JOIN usuarios u2 ON ul.target_user_id = u2.id
+          ORDER BY created_at DESC
+          LIMIT 100
+      `);
+      
+      res.render('logs', { user: req.user, logs, currentPage: 'logs' });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Error al cargar logs');
   }
 });
 

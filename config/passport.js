@@ -83,7 +83,16 @@ async function handleAuth(profile, provider, done) {
     } else {
       id = resUsuarios[0].id
     }
-
+    // Registrar el log de inicio de sesión
+    try {
+      await pool.query(
+          'INSERT INTO user_logs (action_type, user_id, action_details) VALUES (?, ?, ?)',
+          ['login', id, `Login successful via ${provider}`]
+      );
+  } catch (err) {
+      console.error('Error logging login:', err);
+      // No interrumpimos el login si falla el log
+  }
     return done(null, id);
 
   }
