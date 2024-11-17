@@ -51,6 +51,25 @@
 <div class="tabla m-5">
       <form method="POST" action="/admin/update-permissions">
         <table border="1">
+          <% if(messages.success){ %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <%= messages.success %>
+            </div>
+          <% } %>
+          <% if(messages.error){ %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <%= messages.error %>
+            </div>
+          <% } %>
+          <div class="submit-button" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
+            <a href="/index" class="btn btn-info">
+                <i class="fas fa-back"></i> Volver al Index
+            </a>
+            <a href="/admin/logs" class="btn btn-success">
+                <i class="fas fa-list"></i> Logs
+            </a>
+            <button type="submit" class="btn btn-primary">Actualizar Permisos</button>
+        </div>
           <thead>
             <tr>
               <th>ID</th>
@@ -92,25 +111,7 @@
             <% }) %>
           </tbody>
         </table>
-        <% if(messages.success){ %>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-              <%= messages.success %>
-            </div>
-          <% } %>
-          <% if(messages.error){ %>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <%= messages.error %>
-            </div>
-          <% } %>
-          <div class="submit-button" style="display: flex; justify-content: flex-end; gap: 10px;">
-            <a href="/index" class="btn btn-info">
-                <i class="fas fa-back"></i> Volver al Index
-            </a>
-            <a href="/admin/logs" class="btn btn-success">
-                <i class="fas fa-list"></i> Logs
-            </a>
-            <button type="submit" class="btn btn-primary">Actualizar Permisos</button>
-        </div>
+
 
       </form>
     </div>
