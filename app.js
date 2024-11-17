@@ -87,23 +87,25 @@ app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res)
       // Mapea los usuarios para verificar cada checkbox y registrar cambios
       const updates = usuarios.map(async (usuario) => {
           const id = usuario.id;
+          const altas = req.body[`alta_${id}`] === 'on' ? 1 : 0;
           const bajas = req.body[`baja_${id}`] === 'on' ? 1 : 0;
           const isAdmin = req.body[`admin_${id}`] === 'on' ? 1 : 0;
 
+
           // Obtener valores actuales para comparar
           const [currentValues] = await pool.query(
-              'SELECT bajas, is_admin FROM usuarios WHERE id = ?',
+              'SELECT bajas, is_admin, altas FROM usuarios WHERE id = ?',
               [id]
           );
 
           const current = currentValues[0];
           
           // Si hay cambios, actualizar y registrar
-          if (current.bajas !== bajas || current.is_admin !== isAdmin) {
+          if (current.bajas !== bajas || current.is_admin !== isAdmin || current.altas !== altas) {
               // Actualizar permisos
               await pool.query(
-                  'UPDATE usuarios SET bajas = ?, is_admin = ? WHERE id = ?',
-                  [bajas, isAdmin, id]
+                  'UPDATE usuarios SET bajas = ?, is_admin = ?, altas = ? WHERE id = ?',
+                  [bajas, isAdmin, altas, id]
               );
 
               // Registrar el cambio en los logs
@@ -111,6 +113,9 @@ app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res)
               if (current.bajas !== bajas) {
                   changes.push(`bajas: ${current.bajas} -> ${bajas}`);
               }
+              if (current.altas !== altas) {
+                changes.push(`altas: ${current.altas} -> ${altas}`);
+            }
               if (current.is_admin !== isAdmin) {
                   changes.push(`is_admin: ${current.is_admin} -> ${isAdmin}`);
               }

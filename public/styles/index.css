@@ -52,7 +52,6 @@ footer {
     text-align: center;
     display: block;
     padding: 0.8rem 1.2rem;
-    margin: 0px 15px 0px 350px;
     color: rgb(7, 131, 7);
     text-decoration: none;
     border-radius: 8px;
@@ -83,7 +82,6 @@ footer {
     text-align: center;
     display: flex;
     padding: 0.8rem 1.2rem;
-    margin: 0px 15px 0px 350px;
     color: rgb(7, 131, 7);
     text-decoration: none;
     border-radius: 8px;
@@ -199,3 +197,8 @@ footer {
   margin-bottom: 5px;
   }
   
+.separador{
+    color: #666;
+    font-size: 2.2em;
+    font-weight: bold;
+}

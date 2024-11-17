@@ -80,7 +80,6 @@ table th {
     text-align: center;
     display: block;
     padding: 0.8rem 1.2rem;
-    margin: 0px 15px 0px 350px;
     color: rgb(7, 131, 7);
     text-decoration: none;
     border-radius: 8px;
@@ -111,7 +110,6 @@ table th {
     text-align: center;
     display: flex;
     padding: 0.8rem 1.2rem;
-    margin: 0px 15px 0px 350px;
     color: rgb(7, 131, 7);
     text-decoration: none;
     border-radius: 8px;
@@ -231,3 +229,9 @@ table th {
     text-align: right;
     margin-top: 10px;
   }
+
+  .separador{
+    color: #666;
+    font-size: 2.2em;
+    font-weight: bold;
+}

@@ -14,16 +14,18 @@
           Bienvenido <%= user.display_name %>
           <small class="text-muted">(<%= user.username %>)</small>
         </span>
-          <div class="d-flex">
+          <div class="d-flex contenedor-navbar">
             <a href="/alta" class="nav-link-alta <%= currentPage === 'alta' ? 'active' : '' %>">
               <i class="fas fa-plus-circle"></i>
               Alta
             </a>
+            <span class="separador">|</span>
             <% if(user.bajas){ %>
               <a href="/baja" class="nav-link-baja <%= currentPage === 'baja' ? 'active' : '' %>">
                 <i class="fas fa-minus-circle"></i>
                 Baja
               </a>
+              <span class="separador">|</span>
             <% } %>
           </div>
           <div class="d-flex">
