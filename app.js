@@ -7,6 +7,8 @@ const isAuthenticated = require('./middleware/autentication');
 const isAdmin = require('./middleware/isadmin');
 const flash = require('express-flash');
 const pool = require('./config/database');
+const hasBaja = require("./middleware/bajamw")
+const hasAlta = require("./middleware/altamw")
 require('dotenv').config();
 
 const app = express();
@@ -42,15 +44,23 @@ app.get('/', (req, res) => {
   res.render('login', { user: req.user });
 });
 
+// En app.js, actualiza la ruta de index:
+app.get('/index', (req, res) => {
+  res.render('index', { 
+    user: req.user, 
+    currentPage: 'index' 
+  });
+});
+
 app.get('/acceso_denegado', (req, res) => {
   res.render('acceso_denegado');
 });
 
-app.get('/alta', isAuthenticated, (req, res) => {
+app.get('/alta', isAuthenticated, hasAlta, (req, res) => {
   res.render('dashboard', { user: req.user, iframe:req.user.iframe_alta, currentPage: 'alta' });
 });
 
-app.get('/baja', isAuthenticated, (req, res) => {
+app.get('/baja', isAuthenticated, hasBaja, (req, res) => {
   res.render('dashboard', { user: req.user, iframe:req.user.iframe_baja, currentPage: 'baja' });
 });
 
@@ -77,29 +87,29 @@ app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res)
       // Mapea los usuarios para verificar cada checkbox y registrar cambios
       const updates = usuarios.map(async (usuario) => {
           const id = usuario.id;
-          const fullAccess = req.body[`baja_${id}`] === 'on' ? 1 : 0;
+          const bajas = req.body[`baja_${id}`] === 'on' ? 1 : 0;
           const isAdmin = req.body[`admin_${id}`] === 'on' ? 1 : 0;
 
           // Obtener valores actuales para comparar
           const [currentValues] = await pool.query(
-              'SELECT full_access, is_admin FROM usuarios WHERE id = ?',
+              'SELECT bajas, is_admin FROM usuarios WHERE id = ?',
               [id]
           );
 
           const current = currentValues[0];
           
           // Si hay cambios, actualizar y registrar
-          if (current.full_access !== fullAccess || current.is_admin !== isAdmin) {
+          if (current.bajas !== bajas || current.is_admin !== isAdmin) {
               // Actualizar permisos
               await pool.query(
-                  'UPDATE usuarios SET full_access = ?, is_admin = ? WHERE id = ?',
-                  [fullAccess, isAdmin, id]
+                  'UPDATE usuarios SET bajas = ?, is_admin = ? WHERE id = ?',
+                  [bajas, isAdmin, id]
               );
 
               // Registrar el cambio en los logs
               const changes = [];
-              if (current.full_access !== fullAccess) {
-                  changes.push(`full_access: ${current.full_access} -> ${fullAccess}`);
+              if (current.bajas !== bajas) {
+                  changes.push(`bajas: ${current.bajas} -> ${bajas}`);
               }
               if (current.is_admin !== isAdmin) {
                   changes.push(`is_admin: ${current.is_admin} -> ${isAdmin}`);
@@ -162,7 +172,7 @@ app.get('/auth/google/callback',
     failureMessage: true
   }),
   (req, res) => {
-    res.redirect('/alta');
+    res.redirect('/index');
   }
 );
 // Rutas de Microsoft en app.js
@@ -181,7 +191,7 @@ app.get('/auth/microsoft/callback',
     failureMessage: true
   }),
   (req, res) => {
-    res.redirect('/alta');
+    res.redirect('/index');
   }
 );
 

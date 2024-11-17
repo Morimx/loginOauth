@@ -24,7 +24,8 @@ passport.deserializeUser(async (id, done) => {
       id: id,
       username: user.username,
       display_name: user.display_name,
-      full_access: user.full_access,
+      bajas: user.bajas,
+      altas: user.altas,
       iframe_alta: iframe_alta,
       iframe_baja: iframe_baja,
       admin: user.is_admin
@@ -68,7 +69,7 @@ async function handleAuth(profile, provider, done) {
 
       try{
         let [res] = await pool.query(
-          `INSERT INTO usuarios (username, platform_id, full_access, display_name) VALUES (?, ?, ?, ?)`,
+          `INSERT INTO usuarios (username, platform_id, bajas, display_name) VALUES (?, ?, ?, ?)`,
           [
             email,
             profile.id,

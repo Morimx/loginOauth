@@ -20,7 +20,7 @@
                       <i class="fas fa-plus-circle"></i>
                       Alta
                     </a>
-                    <% if(user.full_access){ %>
+                    <% if(user.bajas){ %>
                       <a href="/baja" class="nav-link-baja <%= currentPage === 'baja' ? 'active' : '' %>">
                         <i class="fas fa-minus-circle"></i>
                         Baja
@@ -66,7 +66,7 @@
                   <input 
                     type="checkbox" 
                     name="baja_<%= usuario.id %>" 
-                    <%= usuario.full_access ? 'checked' : '' %> 
+                    <%= usuario.bajas ? 'checked' : '' %> 
                   >
                 </td>
                 <td>
