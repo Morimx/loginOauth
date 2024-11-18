@@ -14,26 +14,34 @@
           Bienvenido <%= user.display_name %>
           <small class="text-muted">(<%= user.username %>)</small>
         </span>
-          <div class="d-flex contenedor-navbar">
-            <a href="/alta" class="nav-link-alta <%= currentPage === 'alta' ? 'active' : '' %>">
-              <i class="fas fa-plus-circle"></i>
-              Alta
-            </a>
-            <span class="separador">|</span>
+          <div class="d-flex">
+            <% if(user && user.two_factor_secret === null){ %>
+              <a href="/2fa-setup" class="nav-link-mfa <%= currentPage === '2fa-setup' ? 'active' : '' %>">
+                  Activar MFA
+              </a>
+              <span class="separador"></span>
+            <% } %>
+            <% if(user.altas){ %>
+              <a href="/alta" class="nav-link-alta <%= currentPage === 'alta' ? 'active' : '' %>">
+                <i class="fas fa-plus-circle"></i>
+                Alta
+              </a>
+              <span class="separador"></span>
+            <% } %>
             <% if(user.bajas){ %>
               <a href="/baja" class="nav-link-baja <%= currentPage === 'baja' ? 'active' : '' %>">
                 <i class="fas fa-minus-circle"></i>
                 Baja
               </a>
-              <span class="separador">|</span>
+              <span class="separador"></span>
             <% } %>
           </div>
           <div class="d-flex">
-            <% if(user.admin == '1'){ %>
-            <a href="/admin" class="nav-link-admin <%= currentPage === 'admin' ? 'active' : '' %>">
-              <i class="fas fa-plus-circle"></i>
-              Admin
-            </a>
+            <% if(user.admin){ %>
+              <a href="/admin" class="nav-link-admin <%= currentPage === 'admin' ? 'active' : '' %>">
+                <i class="fas fa-plus-circle"></i>
+                Admin
+              </a>
             <% } %>
           </div>
     </div>

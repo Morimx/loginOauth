@@ -23,6 +23,8 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-microsoft": "^2.1.0",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
     "tld-extract": "^2.1.0"
   },
   "keywords": [],

@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('./config/passport');
+const speakeasy = require('speakeasy');
+const QRCode = require('qrcode');
 const path = require('path');
 const iframeProxyMiddleware = require('./middleware/security');
 const isAuthenticated = require('./middleware/autentication');
@@ -9,6 +11,7 @@ const flash = require('express-flash');
 const pool = require('./config/database');
 const hasBaja = require("./middleware/bajamw")
 const hasAlta = require("./middleware/altamw")
+const require2FA = require("./middleware/2mfamw")
 require('dotenv').config();
 
 const app = express();
@@ -39,13 +42,109 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+app.get('/2fa-setup', isAuthenticated, async (req, res) => {
+  const secret = speakeasy.generateSecret({
+    name: `YourApp:${req.user.username}`
+  });
+  
+  // Store the secret temporarily in session
+  req.session.tempSecret = secret.base32;
+  
+  // Generate QR code
+  const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
+  
+  res.render('2fa-setup', {
+    qrCodeUrl,
+    secret: secret.base32,
+    user: req.user
+  });
+});
+
+app.post('/2fa-enable', isAuthenticated, async (req, res) => {
+  const { token } = req.body;
+  const secret = req.session.tempSecret;
+
+  const verified = speakeasy.totp.verify({
+    secret: secret,
+    encoding: 'base32',
+    token: token
+  });
+
+  if (verified) {
+    try {
+      // Actualizar usuario con 2FA habilitado usando 1 para true
+      await pool.query(
+        'UPDATE usuarios SET two_factor_secret = ?, two_factor_enabled = 1 WHERE id = ?',
+        [secret, req.user.id]
+      );
+
+      // Log usando el formato existente
+      await pool.query(
+        'INSERT INTO user_logs (action_type, user_id, action_details) VALUES (?, ?, ?)',
+        ['1', req.user.id, 'Activación de autenticación de dos factores']
+      );
+
+      req.session.twoFactorVerified = true;
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error al activar 2FA:', error);
+      res.json({ success: false, message: 'Error al activar 2FA' });
+    }
+  } else {
+    res.json({ success: false, message: 'Código inválido' });
+  }
+});
+
+app.get('/2fa-verify', isAuthenticated, (req, res) => {
+  res.render('2fa-verify', { user: req.user });
+});
+
+app.post('/2fa-verify', isAuthenticated, async (req, res) => {
+  const { token } = req.body;
+  
+  try {
+    const [users] = await pool.query(
+      'SELECT two_factor_secret FROM usuarios WHERE id = ?',
+      [req.user.id]
+    );
+
+    const verified = speakeasy.totp.verify({
+      secret: users[0].two_factor_secret,
+      encoding: 'base32',
+      token: token
+    });
+
+    if (verified) {
+      // Log de verificación exitosa
+      await pool.query(
+        'INSERT INTO user_logs (action_type, user_id, action_details) VALUES (?, ?, ?)',
+        ['1', req.user.id, 'Verificación 2FA exitosa']
+      );
+
+      req.session.twoFactorVerified = true;
+      res.json({ success: true });
+    } else {
+      // Log de verificación fallida
+      await pool.query(
+        'INSERT INTO user_logs (action_type, user_id, action_details) VALUES (?, ?, ?)',
+        ['0', req.user.id, 'Verificación 2FA fallida']
+      );
+
+      res.json({ success: false, message: 'Código inválido' });
+    }
+  } catch (error) {
+    console.error('Error en verificación 2FA:', error);
+    res.json({ success: false, message: 'Error en la verificación' });
+  }
+});
+
 // Rutas
 app.get('/', (req, res) => {
   res.render('login', { user: req.user });
 });
 
 // En app.js, actualiza la ruta de index:
-app.get('/index', (req, res) => {
+app.get('/index', isAuthenticated, require2FA, (req, res) => {
   res.render('index', { 
     user: req.user, 
     currentPage: 'index' 
@@ -56,11 +155,11 @@ app.get('/acceso_denegado', (req, res) => {
   res.render('acceso_denegado');
 });
 
-app.get('/alta', isAuthenticated, hasAlta, (req, res) => {
+app.get('/alta', isAuthenticated, require2FA, hasAlta, (req, res) => {
   res.render('dashboard', { user: req.user, iframe:req.user.iframe_alta, currentPage: 'alta' });
 });
 
-app.get('/baja', isAuthenticated, hasBaja, (req, res) => {
+app.get('/baja', isAuthenticated, require2FA, hasBaja, (req, res) => {
   res.render('dashboard', { user: req.user, iframe:req.user.iframe_baja, currentPage: 'baja' });
 });
 
@@ -69,7 +168,7 @@ app.get('/phishing', isAuthenticated, (req, res) => {
 });
 
 // Nueva ruta para cargar usuarios
-app.get('/admin', isAuthenticated, isAdmin, async (req, res) => {
+app.get('/admin', isAuthenticated, require2FA, isAdmin, async (req, res) => {
   try {
     const [usuarios] = await pool.query('SELECT * FROM usuarios');
     res.render('admin', { user: req.user, usuarios, currentPage: 'admin' });
@@ -80,7 +179,7 @@ app.get('/admin', isAuthenticated, isAdmin, async (req, res) => {
 });
 
 // En app.js, modificar la ruta /admin/update-permissions
-app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res) => {
+app.post('/admin/update-permissions', isAuthenticated, require2FA, isAdmin, async (req, res) => {
   try {
       const [usuarios] = await pool.query('SELECT id FROM usuarios');
       
@@ -137,7 +236,7 @@ app.post('/admin/update-permissions', isAuthenticated, isAdmin, async (req, res)
   }
 });
 
-app.get('/admin/logs', isAuthenticated, isAdmin, async (req, res) => {
+app.get('/admin/logs', isAuthenticated, require2FA, isAdmin, async (req, res) => {
   try {
       const [logs] = await pool.query(`
           SELECT 
