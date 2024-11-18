@@ -1,105 +1,75 @@
-# loginOauth
-# Sistema de Login con Node.js y MariaDB
 
-Este proyecto implementa un sistema de autenticación utilizando Node.js como backend y MariaDB como base de datos. Incluye registro de usuarios, inicio de sesión y gestión de sesiones.
+# ABM - Autenticación y Gestión de Usuarios
 
-## Requisitos Previos
+Este proyecto es una aplicación Node.js para la autenticación y gestión de usuarios, utilizando estrategias como Google OAuth, Microsoft, y autenticación local. También soporta autenticación de dos factores (2FA).
 
-- Node.js (v14 o superior)
-- MariaDB (v10.5 o superior)
-- npm (administrador de paquetes de Node.js)
+## Características
 
-## Tecnologías Utilizadas
-
-- **Backend**: Node.js y Express
-- **Base de Datos**: MariaDB
-- **Autenticación**: JWT (JSON Web Tokens)
-- **Seguridad**: bcrypt para hash de contraseñas
-- **Validación**: express-validator
+- **Autenticación**: Soporte para Google, Microsoft, y autenticación local.
+- **Autenticación de dos factores (2FA)**: Implementado mediante la biblioteca `otpauth`.
+- **Sesiones**: Gestión de sesiones con `express-session`.
+- **Frontend**: Plantillas dinámicas renderizadas con `EJS`.
+- **Base de datos**: Integración con MySQL para almacenamiento de datos.
 
 ## Instalación
 
-1. Clonar el repositorio:
-```bash
-git clone <url-del-repositorio>
-cd nombre-del-proyecto
-```
+1. Clona este repositorio:
+    ```bash
+    git clone <URL-del-repositorio>
+    cd loginOauth
+    ```
 
-2. Instalar dependencias:
-```bash
-npm install
-```
+2. Instala las dependencias:
+    ```bash
+    npm install
+    ```
 
-3. Configurar las variables de entorno:
-   - Crear un archivo `.env` en la raíz del proyecto
-   - Copiar el contenido de `.env.example` y configurar las variables:
-```env
-DB_HOST=localhost
-DB_USER=tu_usuario
-DB_PASSWORD=tu_contraseña
-DB_NAME=nombre_base_datos
-JWT_SECRET=tu_secreto_jwt
-```
+3. Crea un archivo `.env` en el directorio raíz y configura las siguientes variables de entorno:
+    ```env
+    PORT=3000
+    DB_HOST=
+    DB_USER=
+    DB_PASSWORD=
+    DB_NAME=
+    GOOGLE_CLIENT_ID=
+    GOOGLE_CLIENT_SECRET=
+    MICROSOFT_CLIENT_ID=
+    MICROSOFT_CLIENT_SECRET=
+    SESSION_SECRET=
+    ```
 
-4. Inicializar la base de datos:
-```bash
-mysql -u root -p < database/schema.sql
-```
+4. Asegúrate de tener una base de datos MySQL configurada y actualiza las credenciales en el archivo `.env`.
 
-## Estructura del Proyecto
+## Uso
 
-```
-├── src/
-│   ├── config/
-│   │   ├── database.js
-│   │   └── jwt.js
-│   ├── views/
-│   │   ├── acceso_denegado.ejs
-│   │   └── dashboard.ejs
-│   │   └── login.ejs
-│   └── app.js
-```
+1. Inicia la aplicación:
+    ```bash
+    npm start
+    ```
 
-## Endpoints API
+2. Abre tu navegador y ve a `http://localhost:3000`.
 
-### Autenticación
+## Dependencias
 
-- **POST /api/auth/register**
-  - Registro de nuevo usuario
-  - Body: `{ "username": "string", "email": "string", "password": "string" }`
+Las principales dependencias del proyecto incluyen:
 
-- **POST /api/auth/login**
-  - Inicio de sesión
-  - Body: `{ "email": "string", "password": "string" }`
+- [bcrypt](https://www.npmjs.com/package/bcrypt)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+- [ejs](https://www.npmjs.com/package/ejs)
+- [express](https://www.npmjs.com/package/express)
+- [passport](https://www.npmjs.com/package/passport)
+- [mysql2](https://www.npmjs.com/package/mysql2)
 
-- **GET /api/auth/profile**
-  - Obtener perfil del usuario autenticado
-  - Requiere token JWT
+Consulta el archivo `package.json` para obtener una lista completa de las dependencias.
 
-### Usuarios
+## Contribución
 
-- **GET /api/users**
-  - Listar usuarios (requiere autenticación)
-- **GET /api/users/:id**
-  - Obtener usuario por ID (requiere autenticación)
-
-## Seguridad
-
-- Passwords hasheados con bcrypt
-- Protección contra inyección SQL usando consultas preparadas
-- Validación de datos de entrada
-- Tokens JWT para sesiones
-- Headers de seguridad con helmet
-- Rate limiting para prevenir ataques de fuerza bruta
-
-## Contribuir
-
-1. Fork el proyecto
-2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir un Pull Request
+1. Haz un fork del repositorio.
+2. Crea una rama para tu funcionalidad (`git checkout -b nueva-funcionalidad`).
+3. Haz un commit de tus cambios (`git commit -m 'Agrega nueva funcionalidad'`).
+4. Haz un push a la rama (`git push origin nueva-funcionalidad`).
+5. Abre un Pull Request.
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
+Este proyecto está licenciado bajo la licencia ISC.
