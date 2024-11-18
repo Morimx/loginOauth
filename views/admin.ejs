@@ -11,11 +11,17 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="d-flex flex-grow-1">
-                <span class="navbar-brand">
+                <a href="/index" class="navbar-brand">
                   Bienvenido <%= user.display_name %>
                   <small class="text-muted">(<%= user.username %>)</small>
-                </span>
+                </a>
                   <div class="d-flex">
+                    <% if(user && user.two_factor_secret === null){ %>
+                      <a href="/2fa-setup" class="nav-link-mfa <%= currentPage === '2fa-setup' ? 'active' : '' %>">
+                          Activar MFA
+                      </a>
+                      <span class="separador">|</span>
+                    <% } %>
                     <% if(user.altas){ %>
                     <a href="/alta" class="nav-link-alta <%= currentPage === 'alta' ? 'active' : '' %>">
                       <i class="fas fa-plus-circle"></i>
@@ -45,10 +51,10 @@
               <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
             </div>
         </nav>
-        <div style="text-align: center;">
-<span class="table-title ">Tabla de usuarios</span>
-</div>
-<div class="tabla m-5">
+        <div style="text-align: center;" class="table-title">
+          <span>Tabla de usuarios</span>
+        </div>
+<div class="tabla m-3">
       <form method="POST" action="/admin/update-permissions">
         <table border="1">
           <% if(messages.success){ %>

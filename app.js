@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/2fa-setup', isAuthenticated, async (req, res) => {
   const secret = speakeasy.generateSecret({
-    name: `YourApp:${req.user.username}`
+    name: `JavaNS ABM:${req.user.username}`
   });
   
   // Store the secret temporarily in session

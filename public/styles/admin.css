@@ -50,17 +50,15 @@ table th {
 }
 
 .table-title {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
+  font-size: 1.75rem;           /* Tamaño de fuente más grande y moderno */
+  font-weight: 600;             /* Peso de fuente seminegrita, no tan pesado como bold */
+  color: #4a4a4a;              /* Color gris oscuro para darle un aspecto elegante */
+  margin: 20px 0 5px;         /* Espaciado adecuado arriba y abajo */
+  text-align: left;            /* Alineación a la izquierda */
+  letter-spacing: 0.5px;       /* Espaciado entre letras para mayor claridad */
+  font-family: 'Roboto', sans-serif;  /* Fuente moderna y limpia */
+  position: relative;          /* Para crear una línea sutil */
+}
 
 /* Estilos base de la sidebar */
 .sidebar {
@@ -106,11 +104,10 @@ table th {
   
   .nav-link-admin {
     position: relative;
-    width: 100px;
     text-align: center;
     display: flex;
     padding: 0.8rem 1.2rem;
-    color: rgb(7, 131, 7);
+    color: rgb(38, 91, 206);
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s ease;
@@ -153,6 +150,18 @@ table th {
     z-index: -1;
   }
   
+  .nav-link-admin::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #007bff;
+    transition: all 0.3s ease;
+    z-index: -1;
+  }
+
   /* Hover effects */
   .nav-link-alta:hover {
     color: #35b34a;
@@ -168,6 +177,11 @@ table th {
   .nav-link:hover::before {
     left: 0;
   }
+
+  .nav-link-admin:hover {
+    color: rgb(38, 91, 206);
+    border-color: rgb(38, 91, 206);
+  }
   
   /* Estilo activo */
   .nav-link-alta.active {
@@ -178,6 +192,11 @@ table th {
   .nav-link-baja.active {
     background: #d1423d;
     color: white;
+  }
+
+  .nav-link-admin.active {
+    color: rgb(38, 91, 206);
+    border-color: rgb(38, 91, 206);
   }
   
   /* Badge para indicadores (opcional) */
