@@ -28,5 +28,13 @@
     "tld-extract": "^2.1.0"
   },
   "keywords": [],
-  "description": ""
+  "description": "Este proyecto es una aplicación Node.js para la autenticación y gestión de usuarios, utilizando estrategias como Google OAuth, Microsoft, y autenticación local. También soporta autenticación de dos factores (2FA).",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Morimx/loginOauth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Morimx/loginOauth/issues"
+  },
+  "homepage": "https://github.com/Morimx/loginOauth#readme"
 }
