@@ -86,7 +86,7 @@ CREATE TABLE usuarios (
 
 1. Inicia la aplicación:
     ```bash
-    npm start
+    node app.js
     ```
 
 2. Abre tu navegador y ve a `http://localhost:3000`.
